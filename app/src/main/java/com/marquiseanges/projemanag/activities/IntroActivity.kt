@@ -1,4 +1,4 @@
-package com.marquiseanges.projemanag
+package com.marquiseanges.projemanag.activities
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -10,10 +10,13 @@ import android.view.WindowInsetsController
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import com.marquiseanges.projemanag.R
 
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : BaseActivity() {
 
     private lateinit var btn_sign_up_intro : Button
+    private lateinit var btn_sign_in_intro : Button
+
     private var tv_app_name_intro: TextView? = null
 
 
@@ -27,9 +30,8 @@ class IntroActivity : AppCompatActivity() {
         val typeFace: Typeface = Typeface.createFromAsset(assets, "carbon bl.otf")
         tv_app_name_intro?.typeface = typeFace
 
-
-
         btn_sign_up_intro = findViewById(R.id.btn_sign_up_intro)
+        btn_sign_in_intro = findViewById(R.id.btn_sign_in_intro)
 
         val insetsController = window.insetsController
         insetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
@@ -37,6 +39,10 @@ class IntroActivity : AppCompatActivity() {
 
         btn_sign_up_intro.setOnClickListener {
             startActivity(Intent(this@IntroActivity, SignUpActivity::class.java))
+        }
+
+        btn_sign_in_intro.setOnClickListener {
+            startActivity(Intent(this@IntroActivity, SignInActivity::class.java))
         }
     }
 }

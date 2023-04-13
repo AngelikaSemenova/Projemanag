@@ -1,4 +1,4 @@
-package com.marquiseanges.projemanag
+package com.marquiseanges.projemanag.activities
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -8,10 +8,10 @@ import android.os.Handler
 import android.os.Looper
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.view.WindowManager
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.marquiseanges.projemanag.R
 
 
 class SplashActivity : AppCompatActivity() {

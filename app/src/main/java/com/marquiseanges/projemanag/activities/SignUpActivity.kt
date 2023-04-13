@@ -1,4 +1,4 @@
-package com.marquiseanges.projemanag
+package com.marquiseanges.projemanag.activities
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
+import com.marquiseanges.projemanag.R
 
 
 class SignUpActivity : AppCompatActivity() {
