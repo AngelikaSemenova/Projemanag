@@ -2,47 +2,44 @@ package com.marquiseanges.projemanag.activities
 
 import android.content.Intent
 import android.graphics.Typeface
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.widget.Button
-import android.widget.TextView
-import androidx.annotation.RequiresApi
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import com.marquiseanges.projemanag.R
+import kotlinx.android.synthetic.main.activity_intro.*
 
-class IntroActivity : BaseActivity() {
+class IntroActivity : AppCompatActivity() {
 
-    private lateinit var btn_sign_up_intro : Button
-    private lateinit var btn_sign_in_intro : Button
-
-    private var tv_app_name_intro: TextView? = null
-
-
-    @RequiresApi(Build.VERSION_CODES.R)
+    /**
+     * This function is auto created by Android when the Activity Class is created.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
+        //This call the parent constructor
         super.onCreate(savedInstanceState)
+        // This is used to align the xml view to this class
         setContentView(R.layout.activity_intro)
 
+        // This is used to hide the status bar and make the splash screen as a full screen activity.
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
 
-        tv_app_name_intro = findViewById(R.id.tv_app_name_intro)
-        val typeFace: Typeface = Typeface.createFromAsset(assets, "carbon bl.otf")
-        tv_app_name_intro?.typeface = typeFace
-
-        btn_sign_up_intro = findViewById(R.id.btn_sign_up_intro)
-        btn_sign_in_intro = findViewById(R.id.btn_sign_in_intro)
-
-        val insetsController = window.insetsController
-        insetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-        insetsController?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-        btn_sign_up_intro.setOnClickListener {
-            startActivity(Intent(this@IntroActivity, SignUpActivity::class.java))
-        }
+        // This is used to get the file from the assets folder and set it to the title textView.
+        val typeface: Typeface =
+            Typeface.createFromAsset(assets, "carbon bl.ttf")
+        tv_app_name_intro.typeface = typeface
 
         btn_sign_in_intro.setOnClickListener {
+
+            // Launch the sign in screen.
             startActivity(Intent(this@IntroActivity, SignInActivity::class.java))
+        }
+
+        btn_sign_up_intro.setOnClickListener {
+
+            // Launch the sign up screen.
+            startActivity(Intent(this@IntroActivity, SignUpActivity::class.java))
         }
     }
 }

@@ -1,33 +1,37 @@
 package com.marquiseanges.projemanag.activities
 
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import android.text.TextUtils
+import android.view.WindowManager
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.marquiseanges.projemanag.R
+import com.marquiseanges.projemanag.firebase.FirestoreClass
+import com.marquiseanges.projemanag.model.User
+import kotlinx.android.synthetic.main.activity_sign_in.*
 
-class SignInActivity : AppCompatActivity() {
-
-    private var toolbar_sign_in_activity: Toolbar ?= null
-
-    @RequiresApi(Build.VERSION_CODES.R)
+class SignInActivity : BaseActivity() {
+    /**
+     * This function is auto created by Android when the Activity Class is created.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         //This call the parent constructor
         super.onCreate(savedInstanceState)
         // This is used to align the xml view to this class
         setContentView(R.layout.activity_sign_in)
 
-        toolbar_sign_in_activity = findViewById(R.id.toolbar_sign_in_activity)
-
         // This is used to hide the status bar and make the splash screen as a full screen activity.
-        val insetsController = window.insetsController
-        insetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-        insetsController?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
 
         setupActionBar()
+
+        btn_sign_in.setOnClickListener {
+            signInRegisteredUser()
+        }
     }
 
     /**
@@ -43,6 +47,61 @@ class SignInActivity : AppCompatActivity() {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_black_color_back_24dp)
         }
 
-        toolbar_sign_in_activity?.setNavigationOnClickListener { onBackPressed() }
+        toolbar_sign_in_activity.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    /**
+     * A function for Sign-In using the registered user using the email and password.
+     */
+    private fun signInRegisteredUser() {
+        // Here we get the text from editText and trim the space
+        val email: String = et_email.text.toString().trim { it <= ' ' }
+        val password: String = et_password.text.toString().trim { it <= ' ' }
+
+        if (validateForm(email, password)) {
+            // Show the progress dialog.
+            showProgressDialog(resources.getString(R.string.please_wait))
+
+            // Sign-In using FirebaseAuth
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Calling the FirestoreClass signInUser function to get the data of user from database.
+                        FirestoreClass().loadUserData(this@SignInActivity)
+                    } else {
+                        Toast.makeText(
+                            this@SignInActivity,
+                            task.exception!!.message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+        }
+    }
+
+    /**
+     * A function to validate the entries of a user.
+     */
+    private fun validateForm(email: String, password: String): Boolean {
+        return if (TextUtils.isEmpty(email)) {
+            showErrorSnackBar("Please enter email.")
+            false
+        } else if (TextUtils.isEmpty(password)) {
+            showErrorSnackBar("Please enter password.")
+            false
+        } else {
+            true
+        }
+    }
+
+    /**
+     * A function to get the user details from the firestore database after authentication.
+     */
+    fun signInSuccess(user: User) {
+
+        hideProgressDialog()
+
+        startActivity(Intent(this@SignInActivity, MainActivity::class.java))
+        this.finish()
     }
 }
